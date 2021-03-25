@@ -3,7 +3,7 @@ import pandas as pd
 
 def word2vec(ingredient):
 
-  word2vec = joblib.load('models/word2vec.joblib')
+  word2vec = joblib.load('../models/word2vec.joblib')
   try:
     ms = word2vec.wv.most_similar(ingredient)
   except:
