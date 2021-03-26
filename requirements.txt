@@ -29,6 +29,9 @@ typing
 gensim
 uvicorn
 
+# plots
+plotly
+
 # utilities
 six>=1.14
 joblib
