@@ -63,7 +63,7 @@ def display_charts():
 
 @st.cache
 def get_unique_ingredientes():
-    return pd.read_csv('data/ordered_keys.csv', compression='infer', storage_options=None)
+    return pd.read_csv('data/ordered_keys.csv')
 ORDERED_KEYS = get_unique_ingredientes()
 
 # Sidebar
@@ -97,11 +97,11 @@ if navigation == 'Playground':
                 # loading .csv inside else so the page does not need to load if API is ok
                 @st.cache
                 def get_unique_ingredientes():
-                    return pd.read_csv('data/ordered_keys.csv', compression='infer', storage_options=None)
+                    return pd.read_csv('data/ordered_keys.csv')
                 ORDERED_KEYS = get_unique_ingredientes()
                 @st.cache
                 def get_pickle():
-                    return pd.read_pickle('../ingredient_matching/data/ingr_map.pkl', compression='infer',storage_options=None)
+                    return pd.read_pickle('../ingredient_matching/data/ingr_map.pkl')
                 df_pickle = get_pickle()
                 @st.cache
                 def get_ingredients_clean(df_pickle):
@@ -131,11 +131,11 @@ if navigation == 'Playground':
                 # carregar os .csv
                 @st.cache
                 def get_unique_ingredientes():
-                    return pd.read_csv('data/ordered_keys.csv', compression='infer', storage_options=None)
+                    return pd.read_csv('data/ordered_keys.csv')
                 ORDERED_KEYS = get_unique_ingredientes()
                 @st.cache
                 def get_pickle():
-                    return pd.read_pickle('../ingredient_matching/data/ingr_map.pkl', compression='infer',storage_options=None)
+                    return pd.read_pickle('../ingredient_matching/data/ingr_map.pkl')
                 df_pickle = get_pickle()
                 @st.cache
                 def get_ingredients_clean(df_pickle):
@@ -176,7 +176,9 @@ if navigation == 'About':
     st.write('The Food Playground is a tool that suggests flavor harmonizations and possible substitutions between over 8,000 ingredients, based on recipes in whic they appear together.')
     st.write('Two models are the basis for the tools available at the playground: one is based on simple statistical inference, by computing the co-occurance of all items in a 178.000 receipes dataset. Another model uses natural language processing and k-means clustering to train a Machine Learning model that created 30 clusters of similar ingredients.')
     fig, fig2 = display_charts()
+    st.subheader('Ingredients clustering')
     st.plotly_chart(fig)
+    st.subheader('Ingredients clustering 3D')
     st.plotly_chart(fig2)
 
 
