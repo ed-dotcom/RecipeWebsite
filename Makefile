@@ -1,3 +1,3 @@
 run_streamlit:
-    streamlit run app.py
+    streamlit run app_com_api.py
 	
