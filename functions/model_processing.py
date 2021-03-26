@@ -2,10 +2,10 @@ import pandas as pd
 import scipy.sparse as sparse
 import numpy as np
 
-df_pickle = pd.read_pickle('../ingredient_matching/data/ingr_map.pkl')
+df_pickle = pd.read_pickle('data/ingr_map.pkl')
 ingredients_clean = df_pickle[['id','replaced','count','raw_ingr']]
 
-final_sparse = sparse.load_npz(r'../ingredient_matching/data/sparse_final_df.npz')
+final_sparse = sparse.load_npz(r'data/sparse_final_df.npz')
 
 def get_id(ingredient_str):
     # Transforms string input to pre-processed ID
