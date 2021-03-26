@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
-import requests 
+import requests
 from functions.model_processing import *
-# from plotly import display_charts
+from plotly import display_charts
 
 
 ##### MISSING: change background (png)
@@ -61,8 +61,8 @@ if navigation == 'Playground':
     ingredients = st.sidebar.multiselect('', ORDERED_KEYS['replaced'].unique())
     st.title('Food playground')
     ##### MISSING: About paragraph here
-    
-    
+
+
     # code to appear while user has not added input
     if not ingredients:
         st.subheader('Dont tell the kids you are playing with food!')
@@ -102,7 +102,7 @@ if navigation == 'Playground':
                 names_str = names_str.replace('[','')
                 names_str = names_str.replace(']','')
                 st.write(names_str)
-    
+
     if st.sidebar.checkbox('Adventurous combinations', value = True):
         if ingredients:
             adventure_criteria = st.sidebar.slider('How adventurous are you?', 0, 35, 15)
@@ -154,6 +154,6 @@ if navigation == 'Tech':
     st.write('This project uses the dataset provided at https://www.kaggle.com/shuyangli94/food-com-recipes-and-user-interactions?select=PP_recipes.csv')
     st.write('The Food Playground is a tool that suggests flavor harmonizations and possible substitutions between over 8,000 ingredients, based on recipes in whic they appear together.')
     st.write('Two models are the basis for the tools available at the playground: one is based on simple statistical inference, by computing the co-occurance of all items in a 178.000 receipes dataset. Another model uses natural language processing and k-means clustering to train a Machine Learning model that created 30 clusters of similar ingredients.')
-    # fig, fig2 = display_charts()
+    fig, fig2 = display_charts()
     # st.plotly_chart(fig)
     # st.plotly_chart(fig2)
