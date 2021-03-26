@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 import requests
 from functions.model_processing import *
-from plotly import display_charts
-
+# from functions.plot import *
+import plotly.express as px
+import joblib
 
 ##### MISSING: change background (png)
 CSS = """
@@ -41,9 +42,24 @@ def get_similar(ingredient):
         return False
     return response.json()
 
+
+def kmeans():
+  kmeans = joblib.load('models/kmeans.joblib')
+  return kmeans
+
+def display_charts():
+  kmean = kmeans()
+
+  data = pd.read_csv('data/pca.csv')
+  fig = px.scatter(x=data['0'], y=data['1'], color=kmean.labels_, hover_name=data['Unnamed: 0'])
+  fig2 = px.scatter_3d(x=data['0'], y=data['1'], z=data['2'],color=kmean.labels_, hover_name=data['Unnamed: 0'])
+
+  return fig, fig2
+
+
 ##### MISSING: transform in permanent CSS injection (remove checkbox)
-if st.sidebar.checkbox('Inject CSS'):
-    st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
+# if st.sidebar.checkbox('Inject CSS'):
+#     st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
 @st.cache
 def get_unique_ingredientes():
@@ -58,12 +74,10 @@ navigation = st.sidebar.radio('Pages',['Playground', 'About'])
 
 if navigation == 'Playground':
     st.sidebar.subheader('')
+    ##### MISSING: deal with ingredients with '
     ingredients = st.sidebar.multiselect('', ORDERED_KEYS['replaced'].unique())
     st.title('Food playground')
-    ##### MISSING: About paragraph here
-
-
-    # code to appear while user has not added input
+    # instructions and info to appear while user has not added any input
     if not ingredients:
         st.subheader('Dont tell the kids you are playing with food!')
         ##### MISSING: add instructions
@@ -76,8 +90,9 @@ if navigation == 'Playground':
             st.subheader('The most popular combinations are:')
             response_json = get_combination(ingredients, num_matches, adventure=False, adventure_criteria=0)
             if response_json != False:
-                ##### MISSING: from json to str
-                st.write(response_json)
+                response_str = response_json['Recommendations']
+                response_str = ', '.join(response_str)
+                st.write(response_str)
             else:
                 # loading .csv inside else so the page does not need to load if API is ok
                 @st.cache
@@ -103,13 +118,15 @@ if navigation == 'Playground':
                 names_str = names_str.replace(']','')
                 st.write(names_str)
 
-    if st.sidebar.checkbox('Adventurous combinations', value = True):
+    if st.sidebar.checkbox('Adventurous combinations'):
         if ingredients:
             adventure_criteria = st.sidebar.slider('How adventurous are you?', 0, 35, 15)
             st.subheader('Our bold suggestions are:')
             response_json = get_combination(ingredients, num_matches, adventure=True, adventure_criteria=adventure_criteria)
             if response_json != False:
-                st.write(response_json)
+                response_str = response_json['Recommendations']
+                response_str = ', '.join(response_str)
+                st.write(response_str)
             else:
                 # carregar os .csv
                 @st.cache
@@ -137,23 +154,31 @@ if navigation == 'Playground':
 
     if st.sidebar.checkbox('Similar ingredients'):
         if ingredients:
-            st.subheader('Similar:')
             for ingredient in ingredients:
-                st.subheader(ingredient)
+                st.subheader(f'Most similar to {ingredient}')
                 response_json = get_similar(ingredient)
                 if response_json != False:
                     ##### MISSING: maybe filter out results like water, salt,etc
-                    st.write(response_json)
+                    response = response_json['most_similar'][1:]
+                    for item in response:
+                        st.write(item[0],round(float(item[1]),2)*100, '%')
+                    # response_str = ', '.join(response_str)
+                    # st.write(response_str)
+                    df = pd.DataFrame.from_dict(response_json)
                 else:
                     st.write('In development')
 
 
 
-if navigation == 'Tech':
+if navigation == 'About':
     ##### MISSING: write projetc presentation
     st.write('This project uses the dataset provided at https://www.kaggle.com/shuyangli94/food-com-recipes-and-user-interactions?select=PP_recipes.csv')
     st.write('The Food Playground is a tool that suggests flavor harmonizations and possible substitutions between over 8,000 ingredients, based on recipes in whic they appear together.')
     st.write('Two models are the basis for the tools available at the playground: one is based on simple statistical inference, by computing the co-occurance of all items in a 178.000 receipes dataset. Another model uses natural language processing and k-means clustering to train a Machine Learning model that created 30 clusters of similar ingredients.')
     fig, fig2 = display_charts()
-    # st.plotly_chart(fig)
-    # st.plotly_chart(fig2)
+    st.plotly_chart(fig)
+    st.plotly_chart(fig2)
+
+
+
+########### coisas a resolver: banana + tomate o código quebra; ingredientes com aspas quebram tb
