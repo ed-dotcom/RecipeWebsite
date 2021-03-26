@@ -44,3 +44,20 @@ def be_adventurous(id_input,adventure_criteria):
     max_ingredients = round(max(list_) * 0.05)
     min_criteria = min([max([max_ingredients, 10]),adventure_criteria])
     return min_criteria
+
+def output_func(input_ingredient, num_matches = 15, adventure = False, adventure_criteria = 15):
+    '''Combines other functions into a workflow'''
+    # input_ingredient = input_ingredient.split(',')
+    num_matches += 1
+    if type(input_ingredient) != list:
+        input_ingredient = [input_ingredient]
+    id_input = []
+
+    for ingredient in input_ingredient:
+        id_input.append(get_id(ingredient))
+    min_ingredients = 0
+    if adventure:
+        min_ingredients = be_adventurous(id_input,adventure_criteria)
+    id_list = find_match(id_input,num_matches,min_ingredients)
+    names = list_to_names(id_list)
+    return names

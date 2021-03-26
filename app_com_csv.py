@@ -44,21 +44,21 @@ def get_sparse():
 final_sparse = get_sparse()
 
 def output_func(input_ingredient, num_matches = 15, adventure = False, adventure_criteria = 15):
-            '''Combines other functions into a workflow'''
-            # input_ingredient = input_ingredient.split(',')
-            num_matches += 1
-            if type(input_ingredient) != list:
-                input_ingredient = [input_ingredient]
-            id_input = []
+    '''Combines other functions into a workflow'''
+    # input_ingredient = input_ingredient.split(',')
+    num_matches += 1
+    if type(input_ingredient) != list:
+        input_ingredient = [input_ingredient]
+    id_input = []
 
-            for ingredient in input_ingredient:
-                id_input.append(get_id(ingredient))
-            min_ingredients = 0
-            if adventure:
-                min_ingredients = be_adventurous(id_input,adventure_criteria)
-            id_list = find_match(id_input,num_matches,min_ingredients)
-            names = list_to_names(id_list)
-            return names
+    for ingredient in input_ingredient:
+        id_input.append(get_id(ingredient))
+    min_ingredients = 0
+    if adventure:
+        min_ingredients = be_adventurous(id_input,adventure_criteria)
+    id_list = find_match(id_input,num_matches,min_ingredients)
+    names = list_to_names(id_list)
+    return names
 
 def kmeans():
     kmeans = joblib.load('models/kmeans.joblib')
@@ -95,7 +95,7 @@ if navigation == 'Playground':
         if ingredients:
             st.subheader('surprise:')
             adventure_criteria = st.sidebar.slider('How adventurous are you?', 0, 35, 15)
-            names = output_func(ingredients, num_matches, adventure = True, adventure_criteria = adventure_criteria,)
+            names = output_func(ingredients, num_matches, adventure = True, adventure_criteria = adventure_criteria)
             names_str = f'{names}'.replace('\'','')
             names_str = names_str.replace('[','')
             names_str = names_str.replace(']','')
